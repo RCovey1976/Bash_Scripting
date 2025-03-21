@@ -35,18 +35,41 @@ clean_up() {
 }
 
 # New function restart_system(); will prompt user if they would like
-# to reboot system after completed all tasks, and log response.
+# to reboot system after completed all tasks, log response, and complete
+# requested action.
 restart_system() {
-  # Ask user if they'd like to restart.
-  read -p "Would you like to restart your system now? [Y/n]: " response
+  echo "Please choose one of the following options: "
+  echo "1) Shutdown Host"
+  echo "2) Restart Host"
+  echo "3) Exit Script"
+  echo " "
 
-  # Determines actions to be taken, pending on user response.
-  if [[ "$response" =~ ^[Yy]$ ]]; then
-    echo "System update complete. Restarting system..." | tee -a "$LOG_FILE"
-    reboot -h now
-  else
-    echo "System update complete. No restart performed." | tee -a "$LOG_FILE"
-  fi
+  # Prompt the user for input
+  read -p "Enter your choice (1-3): " response
+
+  # Determines actions to be taken, depending on user response.
+  case $response in
+    1)
+      echo "Shutting down host, please wait.." | tee -a "$LOG_FILE"
+      sleep 1
+      shutdown now
+      ;;
+    2)
+      echo "Restarting host, please wait.." | tee -a "$LOG_FILE"
+      sleep 1
+      reboot
+      ;;
+    3)
+      echo "Exiting script, please wait.." | tee -a "$LOG_FILE"
+      sleep 1
+      exit 0
+      ;;
+    *)
+      echo "Invalid response, please choose another option..."
+      sleep 1
+      restart_system
+      ;;
+  esac
 }
 
 update_system
