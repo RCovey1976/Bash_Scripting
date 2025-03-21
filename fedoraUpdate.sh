@@ -30,6 +30,9 @@ clean_up() {
   echo "Cleaning up system; please wait..." | tee -a "$LOG_FILE"
   sudo dnf autoremove -y >> "$LOG_FILE" 2>&1
   sudo dnf clean all >> "$LOG_FILE" 2>&1
+
+  # Cleans up all log files stores in /var/log, if needed.
+  # Can be commented out if not needed.
   sudo rm -rf /var/log/* >> "$LOG_FILE" 2>&1
   echo "Cleaning complete." | tee -a "$LOG_FILE"
 }
