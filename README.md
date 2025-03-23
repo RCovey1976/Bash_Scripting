@@ -7,4 +7,4 @@ This repository will be a hub for all of my bash shell scrip projects. As I lear
 <b><u>[WIP]</u></b>:
   + <b><u>fedoraUpdate.sh</u></b> - <i>Further refining of code and adding functionality.</i>
   + <b><u>fedora_setup.sh</u></b> - <i>Script for automatically setting up a Fedora host after a fresh installation. (IN DEVELOPMENT)</i>
-  + <b><u>LogFileMaintenance.sh</u></b> - <i>Script to automate backing up log files</i> 
+  + <b><u>LogFileMaintenance.sh</u></b> - <i>Script to automate backing up log files. (IN DEVELOPMENT)</i> 
