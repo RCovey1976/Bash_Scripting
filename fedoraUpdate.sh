@@ -1,80 +1,114 @@
 #!/usr/bin/env bash
 #
-# Update script for Fedora hosts.
-# Will run through updates (for both DNF and FlatPaks), write output to LogFile,
-# cleanup unused packages, clean up /var/log, and prompt user to restart.
+# NAME:
+#   fedoraUpdate
+# DOB:
+#   03/07/2025
+# DESCRIPTION:
+# 	Update script for Fedora hosts; will run through both DNF and FlatPak updates,
+# 	cleanup old or unused packages, cleanup /var/log, and prompt user to shutdown
+#	or restart host, view update log file, or exit script.
+# DEPENDENCIES:
+#   + Oh-My-ZSH (https://ohmyz.sh/)
+#   + FlatPak (https://flatpak.org/setup/Fedora)
+# GITHUB:
+#	  https://github.com/RCovey1976/Bash_Scripting/blob/main/fedoraUpdate.sh
+# LICENSE:
+#   https://github.com/RCovey1976/Bash_Scripting/blob/main/LICENSE
+# CONTRIBUTORS:
+#	  @ RCovey1976 (Raymond Covey)
 #
-# Written by Raymond Covey - 03/07/2025
+
+# Verify user has sudo permissions; if not, inform user and exit script.
+if [ $EUID != 0 ];
+then
+        echo "You must run this as root $0"
+        exit 1
+fi
 
 # Define log file location
-LOG_FILE="/path/to/logfile/update_$(date +'%m-%d-%Y').log"
+LOG_FILE="/path/to/logfiles/$(date +'%m-%d-%Y')_updates.log"
 
 # Create or clear the log file.
 > "$LOG_FILE"
 
 # Creating new function update_system()
-update_system() {
+updateSystem() {
   #Updating system with DNF
   echo "Update started at $(date)" | tee -a "$LOG_FILE"
-  sudo dnf update -y >> "$LOG_FILE" 2>&1
+  dnf update -y >> "$LOG_FILE" 2>&1
+  omz update >> "$LOG_FILE" 2>&1
 
   # Updating Flatpak packages
   echo "Updating Flatpak packages..." | tee -a "$LOG_FILE"
   flatpak update -y >> "$LOG_FILE" 2>&1
 
   echo "Updates completed; output written to "$LOG_FILE"" | tee -a "$LOG_FILE"
+  cleanUp
 }
 
 # New function clean(); will remove old packages and clean /var/log
-clean_up() {
+cleanUp() {
   echo "Cleaning up system; please wait..." | tee -a "$LOG_FILE"
   sudo dnf autoremove -y >> "$LOG_FILE" 2>&1
   sudo dnf clean all >> "$LOG_FILE" 2>&1
 
-  # Cleans up all log files stores in /var/log, if needed.
-  # Can be commented out if not needed.
-  sudo rm -rf /var/log/* >> "$LOG_FILE" 2>&1
-  echo "Cleaning complete." | tee -a "$LOG_FILE"
+  # Prompt user if they would like to remove old log files from
+  # /var/log; removes logs on y/Y, continues to next portion of script
+  # on n/N.
+  read -p "Would you like to clean the logs (rm -rf /var/log/*)? (y/n): " choice
+
+  if [[ "$choice" == "y" || "$choice" == "Y" ]]; then
+      # Run the cleaning commands
+      echo "Cleaning logs..." | tee -a "$LOG_FILE"
+      rm -rf /var/log/* >> "$LOG_FILE" 2>&1
+      echo "Cleaning complete." | tee -a "$LOG_FILE"
+  else
+      # Skip the cleaning commands and continue
+      echo "Skipping log cleaning." | tee -a "$LOG_FILE"
+      restartSystem
+  fi
 }
 
 # New function restart_system(); will prompt user if they would like
 # to reboot system after completed all tasks, log response, and complete
 # requested action.
-restart_system() {
+restartSystem() {
+  echo
   echo "Please choose one of the following options: "
   echo "1) Shutdown Host"
   echo "2) Restart Host"
-  echo "3) Exit Script"
+  echo "3) View Log File"
+  echo "4) Exit Script"
   echo " "
 
   # Prompt the user for input
-  read -p "Enter your choice (1-3): " response
+  read -p "Enter your choice (1-4): " response
 
   # Determines actions to be taken, depending on user response.
   case $response in
     1)
       echo "Shutting down host, please wait.." | tee -a "$LOG_FILE"
-      sleep 1
       shutdown now
       ;;
     2)
       echo "Restarting host, please wait.." | tee -a "$LOG_FILE"
-      sleep 1
       reboot
       ;;
     3)
+      echo "Loading log file, please wait.." | tee -a "$LOG_FILE"
+      cat $LOG_FILE
+      restartSystem
+      ;;
+    4)
       echo "Exiting script, please wait.." | tee -a "$LOG_FILE"
-      sleep 1
       exit 0
       ;;
     *)
       echo "Invalid response, please choose another option..."
-      sleep 1
-      restart_system
+      restartSystem
       ;;
   esac
 }
 
-update_system
-clean_up
-restart_system
+updateSystem
