@@ -78,7 +78,7 @@ cleanUp() {
   fi
 }
 
-# New function restart_system(); will prompt user if they would like
+# Function mainMenu(); will prompt user if they would like
 # to reboot system after completed all tasks, log response, and complete
 # requested action.
 mainMenu() {
