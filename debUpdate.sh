@@ -32,7 +32,7 @@ then
 fi
 
 # Define log file location
-LOG_FILE="/home/rcovey/Documents/Coding/LogFiles/Updates/$(date +'%m-%d-%Y')_updates.log"
+LOG_FILE="/path/to/logfiles/$(date +'%m-%d-%Y')_updates.log"
 
 # Create or clear the log file.
 > "$LOG_FILE"
@@ -108,7 +108,7 @@ mainMenu() {
       ;;
     3)
       echo "Printing script file, please wait.." | tee -a "$LOG_FILE"
-      cat /home/rcovey/Documents/Coding/Bash/fedoraUpdate.sh
+      cat /path/to/script/debUpdate.sh
       mainMenu
       ;;
     4)
