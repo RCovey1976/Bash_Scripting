@@ -5,18 +5,18 @@
 # DOB:
 #   03/07/2025
 # DESCRIPTION:
-# 	Update script for Fedora hosts; will run through both DNF and FlatPak updates,
-# 	cleanup old or unused packages, cleanup /var/log, and prompt user to shutdown
-#	or restart host, view update log file, or exit script.
+#   Update script for Fedora hosts; will run through both DNF and FlatPak updates,
+#   cleanup old or unused packages, cleanup /var/log, and prompt user to shutdown
+#   or restart host, view update log file, or exit script.
 # DEPENDENCIES:
 #   + Oh-My-ZSH (https://ohmyz.sh/)
 #   + FlatPak (https://flatpak.org/setup/Fedora)
 # GITHUB:
-#	  https://github.com/RCovey1976/Bash_Scripting/blob/main/fedoraUpdate.sh
+#   https://github.com/RCovey1976/Bash_Scripting/blob/main/fedoraUpdate.sh
 # LICENSE:
 #   https://github.com/RCovey1976/Bash_Scripting/blob/main/LICENSE
 # CONTRIBUTORS:
-#	  @ RCovey1976 (Raymond Covey)
+#    @ RCovey1976 (Raymond Covey)
 #
 
 # Verify user has sudo permissions; if not, inform user and exit script.
@@ -66,49 +66,60 @@ cleanUp() {
   else
       # Skip the cleaning commands and continue
       echo "Skipping log cleaning." | tee -a "$LOG_FILE"
-      restartSystem
+      mainMenu
   fi
 }
 
-# New function restart_system(); will prompt user if they would like
+# Function mainMenu(); will prompt user if they would like
 # to reboot system after completed all tasks, log response, and complete
 # requested action.
-restartSystem() {
+mainMenu() {
   echo
   echo "Please choose one of the following options: "
-  echo "1) Shutdown Host"
-  echo "2) Restart Host"
-  echo "3) View Log File"
+  echo "1) Start Script"
+  echo "2) View LogFile"
+  echo "3) View Script"
   echo "4) Exit Script"
-  echo " "
+  echo "5) Restart Host"
+  echo "6) Shutdown Host"
+  echo
 
   # Prompt the user for input
-  read -p "Enter your choice (1-4): " response
+  read -p " >> Enter your choice (1-4): " response
 
   # Determines actions to be taken, depending on user response.
   case $response in
     1)
+      echo "Starting script, please wait..." | tee -a "$LOG_FILE"
+      updateSystem
+      ;;
+    2)
+      echo "Printing log file, please wait.." | tee -a "$LOG_FILE"
+      cat $LOG_FILE
+      mainMenu
+      ;;
+    3)
+      echo "Printing script file, please wait.." | tee -a "$LOG_FILE"
+      cat /path/to/script/fedoraUpdate.sh
+      mainMenu
+      ;;
+    4)
+      echo "Exiting script. Goodbye!" | tee -a "$LOG_FILE"
+      exit 0
+      ;;
+    5)
+      echo "Rebooting host, please wait.." | tee -a "$LOG_FILE"
+      reboot
+      ;;
+    6)
       echo "Shutting down host, please wait.." | tee -a "$LOG_FILE"
       shutdown now
       ;;
-    2)
-      echo "Restarting host, please wait.." | tee -a "$LOG_FILE"
-      reboot
-      ;;
-    3)
-      echo "Loading log file, please wait.." | tee -a "$LOG_FILE"
-      cat $LOG_FILE
-      restartSystem
-      ;;
-    4)
-      echo "Exiting script, please wait.." | tee -a "$LOG_FILE"
-      exit 0
-      ;;
     *)
       echo "Invalid response, please choose another option..."
-      restartSystem
+      mainMenu
       ;;
   esac
 }
 
-updateSystem
+mainMenu
