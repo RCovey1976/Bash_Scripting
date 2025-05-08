@@ -21,6 +21,7 @@
 #   + Updated $LOG_FILE variable to set dynamic user home path location
 #   + Updated "Pringing log file" section of mainMenu() to navigate to dynamic user home path location.
 #   + Rewrote echo functionality in mainMenu() function
+#   + Added "fwupdmgr" section to updateSystem() function to download and install all firmware updates.
 
 # Verify user has sudo permissions; if not, inform user and exit script.
 if [ $EUID != 0 ];
@@ -45,6 +46,11 @@ updateSystem() {
   # Updating Flatpak packages
   echo "Updating Flatpak packages..." | tee -a "$LOG_FILE"
   flatpak update -y >> "$LOG_FILE" 2>&1
+
+  # Check for firmware updates, and install if any are available.
+  fwupdmgr refresh --force >> "LOG_FILE" 2>&1
+  fwupdmgr get-updates >> "LOG_FILE" 2>&1
+  fwupdmgr update -y >> "LOG_FILE" 2>&1
 
   echo "Updates completed; output written to "$LOG_FILE"" | tee -a "$LOG_FILE"
   cleanUp
