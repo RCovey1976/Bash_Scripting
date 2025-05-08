@@ -6,11 +6,11 @@
 #   03/07/2025
 # DESCRIPTION:
 #   Setup script that displays default (or current) DNF config file, saves this
-#	  to a backup file in case of issues, and then appends a new dnf.conf with
-#	  optimal settings. This can be reversed by deleting the altered dnf.conf,
-#	  and renaming the "dnf.bak" file to "dnf.conf", saving, and running updates.
-#	  Found initial script on Fedora forums (will update with link when possible),
-#	  and script updated by yours truly.
+#   to a backup file in case of issues, and then appends a new dnf.conf with
+#   optimal settings. This can be reversed by deleting the altered dnf.conf,
+#   and renaming the "dnf.bak" file to "dnf.conf", saving, and running updates.
+#   Found initial script on Fedora forums (will update with link when possible),
+#   and script updated by yours truly.
 # DEPENDENCIES:
 #   + <none>
 # GITHUB:
@@ -18,7 +18,7 @@
 # LICENSE:
 #   https://github.com/RCovey1976/Bash_Scripting/blob/main/LICENSE
 # CONTRIBUTORS:
-#	 @ Fedora Forums
+#	 @ lsatenstein on Fedora Forums (https://forums.fedoraforum.org/showthread.php?330619-My-favourite-DNF-reconfiguration)
 #	 @ RCovey1976 (Raymond Covey)
 #
 
@@ -53,7 +53,7 @@ do
 	echo "$line" >> /etc/dnf/dnf.conf
 done
 
-# Print to console the current content of the DNF config file, and prompt
+# Print to console the current content of the DNF config file to confirm changes, and prompt
 # user to hit [ENTER] once done to progress the script.
 echo -e 'Printing new DNF config file, please wait...`n'
 cat /etc/dnf/dnf.conf
