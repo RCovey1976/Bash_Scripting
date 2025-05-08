@@ -16,8 +16,11 @@
 # LICENSE:
 #   https://github.com/RCovey1976/Bash_Scripting/blob/main/LICENSE
 # CONTRIBUTORS:
-#    @ RCovey1976 (Raymond Covey)
-#
+#   @ RCovey1976 (Raymond Covey)
+# CHANGELOG (v1.3):
+#   + Updated $LOG_FILE variable to set dynamic user home path location
+#   + Updated "Pringing log file" section of mainMenu() to navigate to dynamic user home path location.
+#   + Rewrote echo functionality in mainMenu() function
 
 # Verify user has sudo permissions; if not, inform user and exit script.
 if [ $EUID != 0 ];
@@ -27,7 +30,7 @@ then
 fi
 
 # Define log file location
-LOG_FILE="/path/to/logfiles/$(date +'%m-%d-%Y')_updates.log"
+LOG_FILE="$HOME/Documents/$(date +'%m-%d-%Y')_updates.log"
 
 # Create or clear the log file.
 > "$LOG_FILE"
@@ -74,15 +77,14 @@ cleanUp() {
 # to reboot system after completed all tasks, log response, and complete
 # requested action.
 mainMenu() {
-  echo
-  echo "Please choose one of the following options: "
-  echo "1) Start Script"
-  echo "2) View LogFile"
-  echo "3) View Script"
-  echo "4) Exit Script"
-  echo "5) Restart Host"
-  echo "6) Shutdown Host"
-  echo
+  echo -e "
+  Please choose one of the following options: 
+  1) Start Script
+  2) View LogFile
+  3) View Script
+  4) Exit Script
+  5) Restart Host
+  6) Shutdown Host `n"
 
   # Prompt the user for input
   read -p " >> Enter your choice (1-4): " response
@@ -100,7 +102,7 @@ mainMenu() {
       ;;
     3)
       echo "Printing script file, please wait.." | tee -a "$LOG_FILE"
-      cat /path/to/script/fedoraUpdate.sh
+      cat $HOME/Documents/fedoraUpdate.sh
       mainMenu
       ;;
     4)
