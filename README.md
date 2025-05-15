@@ -5,7 +5,7 @@ This repository will be a hub for all of my bash shell scrip projects. As I lear
 <b>~Ray</b>
 
 <h2 align="center"><b><u>[WIP]</u></b>:<br></h2>
-![](https://upload.wikimedia.org/wikipedia/commons/d/d9/Under_construction_animated.gif)
+
     ✅  <b><u>fedoraUpdate.sh</u></b> - <i>Further refining of code and adding functionality.</i><br>
     ✅  <b><u>debUpdate.sh</u></b> - <i>Further refining of code and adding functionality.</i><br>
     ✅  <b><u>bestDNF.sh</u></b> - <i>Further refining of code and adding functionality.</i><br>
