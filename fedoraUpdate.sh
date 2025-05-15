@@ -83,14 +83,15 @@ cleanUp() {
 # to reboot system after completed all tasks, log response, and complete
 # requested action.
 mainMenu() {
-  echo -e "
-  Please choose one of the following options: 
-  1) Start Script
-  2) View LogFile
-  3) View Script
-  4) Exit Script
-  5) Restart Host
-  6) Shutdown Host `n"
+  echo
+  echo "Please choose one of the following options: "
+  echo "1) Start Script"
+  echo "2) View LogFile"
+  echo "3) View Script"
+  echo "4) Exit Script"
+  echo "5) Restart Host"
+  echo "6) Shutdown Host"
+  echo
 
   # Prompt the user for input
   read -p " >> Enter your choice (1-4): " response
