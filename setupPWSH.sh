@@ -35,7 +35,7 @@ setupPWSH() {
 	if [ $? -eq 0 ]; then
 		echo "Successfully installed PowerShell."
   	else
-    	echo "Failed to install PowerShell. Please check logs for further details."
+    		echo "Failed to install PowerShell. Please check logs for further details."
   	fi
 }
 
