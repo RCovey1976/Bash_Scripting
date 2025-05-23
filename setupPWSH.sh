@@ -21,10 +21,31 @@
 #   + Reviewed code
 #   + Tested on Fedora host (VM); confirmed working
 
+# Function checkCurl(); will check host to see if Curl is installed, and if not,
+# will install it. Written for a Fedora host.
+checkCurl() {
+	# Check system for curl, and if not present, install using DNF.
+	if ! rpm -q curl; then
+		echo "Curl not present; installing now.."
+
+		# Install curl via DNF.
+		sudo dnf install curl -y
+
+		# Confirm that curl has been installed.
+		if rpm -q curl > /dev/null 2>&1; then
+			echo "Curl has been successfully installed."
+		else
+			echo "Curl has not been installed."
+		fi
+	fi
+
+	# Move onto main function.
+	setupPWSH
+}
+
 # Function setupPWSH(); will pull repo and add to /etc/yum.repos.d; will then update
-# and install PowerShell 7 to the Fedora host PC.
+# and install PowerShell 7 to the host.
 setupPWSH() {
-	# Add repository from Microsoft, then update via DNF and install Powershell.
 	echo ''
 	echo "Setting up PowerShell, please wait..."
 	curl https://packages.microsoft.com/config/rhel/7/prod.repo | sudo tee /etc/yum.repos.d/microsoft.repo
@@ -35,8 +56,8 @@ setupPWSH() {
 	if [ $? -eq 0 ]; then
 		echo "Successfully installed PowerShell."
   	else
-    		echo "Failed to install PowerShell. Please check logs for further details."
+    	echo "Failed to install PowerShell. Please check logs for further details."
   	fi
 }
 
-setupPWSH
+checkCurl
